@@ -1,3 +1,4 @@
+import 'package:admin/business_logic/auth/auth_cubit.dart';
 import 'package:admin/business_logic/question_answer/question_answer_cubit.dart';
 import 'package:admin/models/question_answer_model.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,8 @@ class QuestionAndAnswerDatabasePage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final question = state.questions[index];
                           return Card(
-                            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             child: ListTile(
                               title: Text(question.question),
                               subtitle: Text(question.answer),
@@ -48,11 +50,14 @@ class QuestionAndAnswerDatabasePage extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     icon: Icon(Icons.edit, color: Colors.blue),
-                                    onPressed: () => _showQuestionDialog(context, question: question),
+                                    onPressed: () => _showQuestionDialog(
+                                        context,
+                                        question: question),
                                   ),
                                   IconButton(
                                     icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () => _confirmDelete(context, question.id),
+                                    onPressed: () =>
+                                        _confirmDelete(context, question.id),
                                   ),
                                 ],
                               ),
@@ -68,7 +73,9 @@ class QuestionAndAnswerDatabasePage extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             onPressed: state.currentPage > 1
-                                ? () => context.read<QuestionAnswerCubit>().previousPage()
+                                ? () => context
+                                    .read<QuestionAnswerCubit>()
+                                    .previousPage()
                                 : null,
                             child: Text("Previous"),
                           ),
@@ -76,7 +83,8 @@ class QuestionAndAnswerDatabasePage extends StatelessWidget {
                           Text("Page ${state.currentPage}"),
                           SizedBox(width: 10),
                           ElevatedButton(
-                            onPressed: () => context.read<QuestionAnswerCubit>().nextPage(),
+                            onPressed: () =>
+                                context.read<QuestionAnswerCubit>().nextPage(),
                             child: Text("Next"),
                           ),
                         ],
@@ -95,8 +103,10 @@ class QuestionAndAnswerDatabasePage extends StatelessWidget {
   }
 
   void _showQuestionDialog(BuildContext context, {QuestionAnswer? question}) {
-    final TextEditingController questionController = TextEditingController(text: question?.question ?? '');
-    final TextEditingController answerController = TextEditingController(text: question?.answer ?? '');
+    final TextEditingController questionController =
+        TextEditingController(text: question?.question ?? '');
+    final TextEditingController answerController =
+        TextEditingController(text: question?.answer ?? '');
 
     showDialog(
       context: context,
@@ -120,24 +130,30 @@ class QuestionAndAnswerDatabasePage extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             child: Text("Cancel"),
           ),
-          ElevatedButton(
-            onPressed: () {
-              if (question == null) {
-                context.read<QuestionAnswerCubit>().createQuestion(
-                  questionController.text,
-                  answerController.text,
-                  "Admin", // Replace with actual user
-                );
-              } else {
-                context.read<QuestionAnswerCubit>().updateQuestion(
-                  question.id,
-                  questionController.text,
-                  answerController.text,
-                );
-              }
-              Navigator.pop(context);
+          BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              String? userName =
+                  state is AuthLoggedIn ? state.userName : "Admin";
+              return ElevatedButton(
+                onPressed: () {
+                  if (question == null) {
+                    context.read<QuestionAnswerCubit>().createQuestion(
+                          questionController.text,
+                          answerController.text,
+                          userName ?? "", // Replace with actual user
+                        );
+                  } else {
+                    context.read<QuestionAnswerCubit>().updateQuestion(
+                          question.id,
+                          questionController.text,
+                          answerController.text,
+                        );
+                  }
+                  Navigator.pop(context);
+                },
+                child: Text(question == null ? "Add" : "Update"),
+              );
             },
-            child: Text(question == null ? "Add" : "Update"),
           ),
         ],
       ),

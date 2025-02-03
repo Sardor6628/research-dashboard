@@ -1,14 +1,14 @@
+import 'package:admin/constants/constant_endpoints.dart';
 import 'package:dio/dio.dart';
 import '../models/question_answer_test_model.dart';
 
 class QuestionAnswerTestRepository {
   final Dio _dio = Dio();
-  static const String _baseUrl = "https://your-api-url.com"; // Replace with actual API base URL
 
   Future<QuestionAnswerTestModel?> askQuestion(String user, String question) async {
     try {
       final response = await _dio.post(
-        "$_baseUrl/check_question/",
+        ConstantEndpoints.BASE_URL+ConstantEndpoints.QUESTION_ANSWER_TEST,
         data: {"user": user, "question": question},
       );
 
