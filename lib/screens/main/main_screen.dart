@@ -4,6 +4,9 @@ import 'package:admin/controllers/menu_app_controller.dart';
 import 'package:admin/screens/auth/login.dart';
 import 'package:admin/screens/dashboard/components/header.dart';
 import 'package:admin/screens/dashboard/dashboard_screen.dart';
+import 'package:admin/screens/image_clasification/image_classification_main_page.dart';
+import 'package:admin/screens/q_a_db/q_a_db_page.dart';
+import 'package:admin/screens/q_a_test/q_a_test_page.dart';
 import 'package:admin/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,15 +75,13 @@ class MainScreen extends StatelessWidget {
   Widget _getPage(String menu) {
     switch (menu) {
       case "Q/A Database":
-        return Center(child: Text("Q/A Database Screen", style: TextStyle(fontSize: 24)));
+        return QuestionAndAnswerDatabasePage();
       case "Q/A Chat Test":
-        return Center(child: Text("Q/A Chat Test Screen", style: TextStyle(fontSize: 24)));
+        return QuestionAndAnswerTestPage();
       case "Image Classification":
-        return Center(child: Text("Image Classification Screen", style: TextStyle(fontSize: 24)));
+        return ImageClassificationMainPage();
       default:
-        return Container(
-
-        ); // Displays dashboard by default
+        return Container(); // Displays dashboard by default
     }
   }
 }

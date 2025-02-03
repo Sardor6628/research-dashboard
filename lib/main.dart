@@ -1,13 +1,15 @@
 import 'package:admin/business_logic/auth/auth_cubit.dart';
 import 'package:admin/business_logic/menu/menu_cubit.dart';
+import 'package:admin/business_logic/question_answer/question_answer_cubit.dart';
 import 'package:admin/constants/constants.dart';
 import 'package:admin/controllers/menu_app_controller.dart';
+import 'package:admin/repositories/auth_repository.dart';
+import 'package:admin/repositories/question_answer_repository.dart';
 import 'package:admin/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'repositories/auth_repository.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,6 +27,10 @@ class MyApp extends StatelessWidget {
           create: (context) => MenuAppController(),
         ),
         BlocProvider(create: (context) => MenuCubit()),
+        BlocProvider(
+          create: (context) =>
+          QuestionAnswerCubit(QuestionAnswerRepository())..fetchQuestions(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
