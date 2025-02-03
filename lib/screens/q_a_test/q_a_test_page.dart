@@ -66,33 +66,31 @@ class _QuestionAndAnswerTestPageState extends State<QuestionAndAnswerTestPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Your Question:", style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(response.question, style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              Divider(),
-              Text("Answer:", style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(response.answer, style: TextStyle(fontSize: 16)),
-              if (response.isExistOnDb)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10),
-                    Divider(),
-                    Text("Existing Question in DB:", style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(response.questionOnDb, style: TextStyle(fontSize: 16, color: Colors.blue)),
-                  ],
-                ),
-              SizedBox(height: 10),
-              Text("Source: ${response.answerFrom}", style: TextStyle(fontStyle: FontStyle.italic)),
-              Visibility(
-                  visible: response.isExistOnDb,
-                  child: Text("Answered by: ${response.answeredBy}", style: TextStyle(fontStyle: FontStyle.italic))),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Your Question:", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(response.question, style: TextStyle(fontSize: 16)),
+            SizedBox(height: 10),
+            Divider(),
+            SingleChildScrollView(child: Text("Answer:", style: TextStyle(fontWeight: FontWeight.bold))),
+            Text(response.answer, style: TextStyle(fontSize: 16)),
+            if (response.isExistOnDb)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Divider(),
+                  Text("Existing Question in DB:", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(response.questionOnDb, style: TextStyle(fontSize: 16, color: Colors.blue)),
+                ],
+              ),
+            SizedBox(height: 10),
+            Text("Source: ${response.answerFrom}", style: TextStyle(fontStyle: FontStyle.italic)),
+            Visibility(
+                visible: response.isExistOnDb,
+                child: Text("Answered by: ${response.answeredBy}", style: TextStyle(fontStyle: FontStyle.italic))),
+          ],
         ),
       ),
     );
