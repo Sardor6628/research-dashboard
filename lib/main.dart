@@ -1,5 +1,6 @@
 import 'package:admin/business_logic/auth/auth_cubit.dart';
-import 'package:admin/constants.dart';
+import 'package:admin/business_logic/menu/menu_cubit.dart';
+import 'package:admin/constants/constants.dart';
 import 'package:admin/controllers/menu_app_controller.dart';
 import 'package:admin/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => MenuAppController(),
         ),
+        BlocProvider(create: (context) => MenuCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -33,7 +35,11 @@ class MyApp extends StatelessWidget {
               .apply(bodyColor: Colors.white),
           canvasColor: secondaryColor,
         ),
-        home: MainScreen(),
+        home: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            return MainScreen();
+          },
+        ),
       ),
     );
   }

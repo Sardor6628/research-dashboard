@@ -1,10 +1,10 @@
 import 'package:admin/controllers/menu_app_controller.dart';
-import 'package:admin/responsive.dart';
+import 'package:admin/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constants.dart';
+import '../../../constants/constants.dart';
 
 class Header extends StatelessWidget {
   const Header({

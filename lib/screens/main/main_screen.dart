@@ -1,36 +1,62 @@
-import 'package:admin/controllers/menu_app_controller.dart';
-import 'package:admin/responsive.dart';
-import 'package:admin/screens/dashboard/dashboard_screen.dart';
+import 'package:admin/business_logic/auth/auth_cubit.dart';
+import 'package:admin/business_logic/menu/menu_cubit.dart';
+import 'package:admin/screens/auth/login.dart';
+import 'package:admin/screens/main/components/side_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:ui';
 
-import 'components/side_menu.dart';
 
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: context.read<MenuAppController>().scaffoldKey,
       drawer: SideMenu(),
-      body: SafeArea(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // We want this side menu only for large screen
-            if (Responsive.isDesktop(context))
-              Expanded(
-                // default flex = 1
-                // and it takes 1/6 part of the screen
-                child: SideMenu(),
-              ),
-            Expanded(
-              // It takes 5/6 part of the screen
-              flex: 5,
-              child: DashboardScreen(),
-            ),
-          ],
-        ),
+      appBar: AppBar(title: Text("Admin Dashboard")),
+      body: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, authState) {
+          if (authState is AuthLoggedIn) {
+            return BlocBuilder<MenuCubit, MenuState>(
+              builder: (context, menuState) {
+                return Stack(
+                  children: [
+                    _getPage(menuState.selectedMenu),
+                  ],
+                );
+              },
+            );
+          } else {
+            return Stack(
+              children: [
+                // Blurred Background
+                Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(color: Colors.black.withOpacity(0.2)),
+                  ),
+                ),
+                // Login Dialog
+                Center(
+                  child: LoginDialog(),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
+  }
+
+  Widget _getPage(String menu) {
+    switch (menu) {
+      case "Q/A Database":
+        return Center(child: Text("Q/A Database Screen", style: TextStyle(fontSize: 24)));
+      case "Q/A Chat Test":
+        return Center(child: Text("Q/A Chat Test Screen", style: TextStyle(fontSize: 24)));
+      case "Image Classification":
+        return Center(child: Text("Image Classification Screen", style: TextStyle(fontSize: 24)));
+      default:
+        return Center(child: Text("Dashboard", style: TextStyle(fontSize: 24)));
+    }
   }
 }
