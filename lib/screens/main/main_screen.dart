@@ -1,41 +1,63 @@
 import 'package:admin/business_logic/auth/auth_cubit.dart';
 import 'package:admin/business_logic/menu/menu_cubit.dart';
+import 'package:admin/controllers/menu_app_controller.dart';
 import 'package:admin/screens/auth/login.dart';
-import 'package:admin/screens/main/components/side_menu.dart';
+import 'package:admin/screens/dashboard/components/header.dart';
+import 'package:admin/screens/dashboard/dashboard_screen.dart';
+import 'package:admin/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:ui';
 
+import 'components/side_menu.dart';
 
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: context.read<MenuAppController>().scaffoldKey,
       drawer: SideMenu(),
-      appBar: AppBar(title: Text("Admin Dashboard")),
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, authState) {
           if (authState is AuthLoggedIn) {
-            return BlocBuilder<MenuCubit, MenuState>(
-              builder: (context, menuState) {
-                return Stack(
-                  children: [
-                    _getPage(menuState.selectedMenu),
-                  ],
-                );
-              },
+            return SafeArea(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (Responsive.isDesktop(context))
+                    Expanded(
+                      child: SideMenu(),
+                    ),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Header(userName: authState.userName ?? "User"),
+                        ),
+                        Expanded(
+                          child: BlocBuilder<MenuCubit, MenuState>(
+                            builder: (context, menuState) {
+                              return _getPage(menuState.selectedMenu);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             );
           } else {
             return Stack(
               children: [
-                // Blurred Background
                 Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(color: Colors.black.withOpacity(0.2)),
                   ),
                 ),
-                // Login Dialog
                 Center(
                   child: LoginDialog(),
                 ),
@@ -56,7 +78,9 @@ class MainScreen extends StatelessWidget {
       case "Image Classification":
         return Center(child: Text("Image Classification Screen", style: TextStyle(fontSize: 24)));
       default:
-        return Center(child: Text("Dashboard", style: TextStyle(fontSize: 24)));
+        return Container(
+
+        ); // Displays dashboard by default
     }
   }
 }
