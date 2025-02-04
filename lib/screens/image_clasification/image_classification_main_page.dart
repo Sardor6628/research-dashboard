@@ -61,7 +61,7 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
     );
   }
 
-  /// 🟢 **Header with Title**
+  /// Header Title
   Widget _buildHeader() {
     return Text(
       "Image Classification",
@@ -69,34 +69,22 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
     );
   }
 
-  /// 🟢 **Image Upload Button with Hover Effect**
+  /// Image Upload Button with Material 3 Styling
   Widget _buildImageUploadButton() {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.blueAccent.withOpacity(0.8),
-          boxShadow: [
-            BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
-          ],
-        ),
-        child: ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          ),
-          onPressed: _pickImage,
-          icon: Icon(Icons.upload, color: Colors.white),
-          label: Text("Select an Image", style: TextStyle(fontSize: 16, color: Colors.white)),
-        ),
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blueAccent,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
       ),
+      onPressed: _pickImage,
+      icon: Icon(Icons.upload, color: Colors.white),
+      label: Text("Select an Image", style: TextStyle(fontSize: 16, color: Colors.white)),
     );
   }
 
-  /// 🟢 **Selected Image Info Display**
+  /// Selected Image Display
   Widget _buildSelectedImageInfo() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -107,7 +95,7 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
     );
   }
 
-  /// 🟢 **Loading Indicator**
+  /// Loading Indicator
   Widget _buildLoadingIndicator() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -119,7 +107,7 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
     );
   }
 
-  /// 🟢 **Placeholder Text Before Upload**
+  /// Placeholder Text Before Upload
   Widget _buildPlaceholderText() {
     return Text(
       "Upload an image to analyze.",
@@ -127,7 +115,7 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
     );
   }
 
-  /// 🔴 **Error Display UI**
+  /// Error Display UI
   Widget _buildErrorUI(String errorMessage) {
     return Center(
       child: Column(
@@ -141,7 +129,7 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
     );
   }
 
-  /// 🟢 **Analysis Results UI**
+  /// Analysis Results UI
   Widget _buildAnalysisUI(ImageAnalysisResult result) {
     return SingleChildScrollView(
       child: Card(
@@ -157,21 +145,21 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
               Divider(thickness: 1),
               SizedBox(height: 10),
 
-              /// 📌 **Angles Data**
-              Text("📌 **Angles**:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              ...result.angles.entries.map((entry) => Text("👉 ${entry.key}: ${entry.value.toStringAsFixed(1)}°", style: TextStyle(fontSize: 14))),
+              /// Angles Data
+              Text("Angles:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              ...result.angles.entries.map((entry) => Text("${entry.key}: ${entry.value.toStringAsFixed(1)}°", style: TextStyle(fontSize: 14))),
               SizedBox(height: 10),
 
-              /// 📌 **Landmarks Data**
-              Text("📌 **Landmarks**:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              /// Landmarks Data
+              Text("Landmarks:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ...result.landmarks.entries.map((entry) {
-                return Text("🗺 ${entry.key}: x=${entry.value['x']}, y=${entry.value['y']}, z=${entry.value['z']}", style: TextStyle(fontSize: 14));
+                return Text("${entry.key}: x=${entry.value['x']}, y=${entry.value['y']}, z=${entry.value['z']}", style: TextStyle(fontSize: 14));
               }),
 
               SizedBox(height: 10),
 
-              /// 🖼 **Annotated Image Display**
-              Text("📌 **Annotated Image**:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              /// Annotated Image Display
+              Text("Annotated Image:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               SizedBox(height: 10),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -180,7 +168,7 @@ class _ImageClassificationMainPageState extends State<ImageClassificationMainPag
                   height: 200,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Text("⚠ Failed to load image.", style: TextStyle(color: Colors.redAccent));
+                    return Text("Failed to load image.", style: TextStyle(color: Colors.redAccent));
                   },
                 ),
               ),

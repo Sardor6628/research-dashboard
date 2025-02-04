@@ -23,6 +23,8 @@ class AuthRepository {
         options: Options(headers: {
           "accept": "application/json",
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true"
+
         }),
         data: {"email": email, "password": password},
       );
