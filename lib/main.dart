@@ -1,10 +1,12 @@
 import 'package:admin/business_logic/auth/auth_cubit.dart';
+import 'package:admin/business_logic/image_classfication/image_analysis_cubit.dart';
 import 'package:admin/business_logic/menu/menu_cubit.dart';
 import 'package:admin/business_logic/question_answer/question_answer_cubit.dart';
 import 'package:admin/business_logic/question_answer_test/question_answer_test_cubit.dart';
 import 'package:admin/constants/constants.dart';
 import 'package:admin/controllers/menu_app_controller.dart';
 import 'package:admin/repositories/auth_repository.dart';
+import 'package:admin/repositories/image_analysis_repository.dart';
 import 'package:admin/repositories/question_answer_repository.dart';
 import 'package:admin/repositories/question_answer_test_repository.dart';
 import 'package:admin/screens/main/main_screen.dart';
@@ -36,6 +38,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               QuestionAnswerTestCubit(QuestionAnswerTestRepository()),
+        ),
+        BlocProvider(
+          create: (context) => ImageAnalysisCubit(ImageAnalysisRepository()),
         ),
       ],
       child: MaterialApp(
