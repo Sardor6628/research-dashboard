@@ -4,19 +4,24 @@ import '../models/question_answer_model.dart';
 
 class QuestionAnswerRepository {
   final Dio _dio = Dio();
-  static const String _baseUrl = ConstantEndpoints.BASE_URL+ConstantEndpoints.QUESTION_ANSWER; // Replace with your actual API base URL
+  static const String _baseUrl = ConstantEndpoints.BASE_URL +
+      ConstantEndpoints
+          .QUESTION_ANSWER; // Replace with your actual API base URL
 
   Future<List<QuestionAnswer>> fetchQuestions(int page, int pageSize) async {
     try {
-      final response = await _dio.get(
-        "$_baseUrl/",
-        queryParameters: {"page": page, "size": pageSize},
-      );
-
+      final response = await _dio.get("$_baseUrl/",
+          queryParameters: {"page": page, "size": pageSize},
+          options: Options(headers: {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true"
+          }));
       if (response.statusCode == 200 && response.data["status"] == "success") {
-        List<QuestionAnswer> questions = (response.data["result"]["items"] as List)
-            .map((json) => QuestionAnswer.fromJson(json))
-            .toList();
+        List<QuestionAnswer> questions =
+            (response.data["result"]["items"] as List)
+                .map((json) => QuestionAnswer.fromJson(json))
+                .toList();
         return questions;
       } else {
         throw Exception("Failed to load data");
@@ -26,10 +31,14 @@ class QuestionAnswerRepository {
     }
   }
 
-  Future<QuestionAnswer?> createQuestion(String question, String answer, String createdBy) async {
+  Future<QuestionAnswer?> createQuestion(
+      String question, String answer, String createdBy) async {
     try {
-      final response = await _dio.post("$_baseUrl/",
-          data: {"question": question, "answer": answer, "created_by": createdBy});
+      final response = await _dio.post("$_baseUrl/", data: {
+        "question": question,
+        "answer": answer,
+        "created_by": createdBy
+      });
 
       if (response.statusCode == 200 && response.data["status"] == "success") {
         return QuestionAnswer.fromJson(response.data["result"]);
@@ -41,7 +50,8 @@ class QuestionAnswerRepository {
     }
   }
 
-  Future<QuestionAnswer?> updateQuestion(int id, String question, String answer) async {
+  Future<QuestionAnswer?> updateQuestion(
+      int id, String question, String answer) async {
     try {
       final response = await _dio.put(
         "$_baseUrl/$id",

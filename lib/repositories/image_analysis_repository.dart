@@ -24,7 +24,14 @@ class ImageAnalysisRepository {
         "file": MultipartFile.fromBytes(fileBytes, filename: imageFile.name),
       });
 
-      final response = await _dio.post(ConstantEndpoints.BASE_URL+ConstantEndpoints.IMAGE_CLASSIFICATION, data: formData);
+      final response = await _dio.post(
+          ConstantEndpoints.BASE_URL + ConstantEndpoints.IMAGE_CLASSIFICATION,
+          data: formData,
+          options: Options(headers: {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true"
+          }));
 
       if (response.statusCode == 200 && response.data.containsKey("angles")) {
         return ImageAnalysisResult.fromJson(response.data);

@@ -5,12 +5,17 @@ import '../models/question_answer_test_model.dart';
 class QuestionAnswerTestRepository {
   final Dio _dio = Dio();
 
-  Future<QuestionAnswerTestModel?> askQuestion(String user, String question) async {
+  Future<QuestionAnswerTestModel?> askQuestion(
+      String user, String question) async {
     try {
       final response = await _dio.post(
-        ConstantEndpoints.BASE_URL+ConstantEndpoints.QUESTION_ANSWER_TEST,
-        data: {"user": user, "question": question},
-      );
+          ConstantEndpoints.BASE_URL + ConstantEndpoints.QUESTION_ANSWER_TEST,
+          data: {"user": user, "question": question},
+          options: Options(headers: {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true"
+          }));
 
       if (response.statusCode == 200 && response.data["status"] == "success") {
         return QuestionAnswerTestModel.fromJson(response.data["result"]);
