@@ -3,12 +3,14 @@ import 'package:admin/business_logic/image_classfication/image_analysis_cubit.da
 import 'package:admin/business_logic/menu/menu_cubit.dart';
 import 'package:admin/business_logic/question_answer/question_answer_cubit.dart';
 import 'package:admin/business_logic/question_answer_test/question_answer_test_cubit.dart';
+import 'package:admin/business_logic/workout_plan_recomendation/workout_plan_cubit.dart';
 import 'package:admin/constants/constants.dart';
 import 'package:admin/controllers/menu_app_controller.dart';
 import 'package:admin/repositories/auth_repository.dart';
 import 'package:admin/repositories/image_analysis_repository.dart';
 import 'package:admin/repositories/question_answer_repository.dart';
 import 'package:admin/repositories/question_answer_test_repository.dart';
+import 'package:admin/repositories/workout_plan_recommendation.dart';
 import 'package:admin/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +33,8 @@ class MyApp extends StatelessWidget {
           create: (context) => MenuAppController(),
         ),
         BlocProvider(create: (context) => MenuCubit()),
+        BlocProvider(
+          create: (context) => WorkoutPlanCubit(WorkoutPlanRecommendationRepository()),),
         BlocProvider(
           create: (context) =>
               QuestionAnswerCubit(QuestionAnswerRepository())..fetchQuestions(),

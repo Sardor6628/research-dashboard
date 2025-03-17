@@ -24,6 +24,12 @@ class SideMenu extends StatelessWidget {
               return Column(
                 children: [
                   DrawerListTile(
+                    title: "Workout Plan Recommendation",
+                    svgSrc: "assets/icons/menu_dashboard.svg",
+                    isSelected: state.selectedMenu == "Workout Plan Recommendation",
+                    press: () => context.read<MenuCubit>().selectMenu("Workout Plan Recommendation"),
+                  ),
+                  DrawerListTile(
                     title: "Q/A Database",
                     svgSrc: "assets/icons/menu_dashboard.svg",
                     isSelected: state.selectedMenu == "Q/A Database",

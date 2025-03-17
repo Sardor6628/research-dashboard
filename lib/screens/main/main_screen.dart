@@ -7,6 +7,7 @@ import 'package:admin/screens/dashboard/dashboard_screen.dart';
 import 'package:admin/screens/image_clasification/image_classification_main_page.dart';
 import 'package:admin/screens/q_a_db/q_a_db_page.dart';
 import 'package:admin/screens/q_a_test/q_a_test_page.dart';
+import 'package:admin/screens/workout_plan_recommendation/workout_plan_recommendation.dart';
 import 'package:admin/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,6 +81,8 @@ class MainScreen extends StatelessWidget {
         return QuestionAndAnswerTestPage();
       case "Image Classification":
         return ImageClassificationMainPage();
+      case "Workout Plan Recommendation":
+        return WorkoutPlanRecommendation();
       default:
         return Container(); // Displays dashboard by default
     }
