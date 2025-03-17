@@ -1,5 +1,5 @@
 class ConstantEndpoints{
-  static const String BASE_URL = "http://0.0.0.0:8080/";
+  static const String BASE_URL = "https://ddef-211-184-136-180.ngrok-free.app/";
   static const String LOGIN = "auth/login";
   static const String QUESTION_ANSWER="questions_answers";
   static const String QUESTION_ANSWER_TEST="check_similarity/check_question/";

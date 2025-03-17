@@ -7,16 +7,46 @@ class WorkoutPlanRecommendation extends StatefulWidget {
   const WorkoutPlanRecommendation({super.key});
 
   @override
-  State<WorkoutPlanRecommendation> createState() => _WorkoutPlanRecommendationState();
+  State<WorkoutPlanRecommendation> createState() =>
+      _WorkoutPlanRecommendationState();
 }
 
 class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
   final TextEditingController _userIdController = TextEditingController();
+  String? _selectedTestUserId;
+
+  // List of test user IDs for dropdown
+  final List<String> testUserIds = [
+    "c50ace03-ee22-4c3b-9216-2cb26e604f1a",
+    "29910456-f0fe-4d06-9a6f-0c007d59b098",
+    "0675fce0-a5be-48d6-b9a4-67d8419399c7",
+    "c221a725-b4c8-4bfc-b95c-048d3af76c5a",
+    "5f2a8676-981c-4266-bb27-bba240c94d62",
+    "3280d6b9-c397-4e92-a700-c699563fb4c9",
+    "792d34bf-235b-4148-9280-fa288a81054b"
+  ];
 
   @override
   void dispose() {
     _userIdController.dispose();
     super.dispose();
+  }
+
+  void _fetchWorkoutPlan() {
+    String userId = _userIdController.text.trim();
+    if (userId.isNotEmpty) {
+      context.read<WorkoutPlanCubit>().fetchWorkoutPlan(userId);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter or select a User ID")),
+      );
+    }
+  }
+  @override
+  void initState() {
+    _userIdController.text="c50ace03-ee22-4c3b-9216-2cb26e604f1a";
+    _fetchWorkoutPlan();
+    super.initState();
   }
 
   @override
@@ -25,7 +55,7 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          // Search Field and Check Button in the same row
+          // Search Field, Dropdown, and Check Button in the same row
           Row(
             children: [
               Expanded(
@@ -42,17 +72,30 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                 ),
               ),
               const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  String userId = _userIdController.text.trim();
-                  if (userId.isNotEmpty) {
-                    context.read<WorkoutPlanCubit>().fetchWorkoutPlan(userId);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please enter a User ID")),
-                    );
-                  }
+
+              // Dropdown for test User IDs
+              DropdownButton<String>(
+                hint: const Text("Select Test User"),
+                value: _selectedTestUserId,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedTestUserId = newValue;
+                    _userIdController.text = newValue ?? "";
+                  });
+                  context.read<WorkoutPlanCubit>().fetchWorkoutPlan(_userIdController.text);
                 },
+                items: testUserIds.map((String userId) {
+                  return DropdownMenuItem(
+                    value: userId,
+                    child: Text(userId),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(width: 10),
+
+              // Check Button
+              ElevatedButton(
+                onPressed: _fetchWorkoutPlan,
                 child: const Text("Check"),
               ),
             ],
@@ -85,73 +128,131 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                         ),
                         const SizedBox(height: 20),
 
-                        // Categorized Muscle Groups Data
-                        ...state.exerciseData.result.entries.map((entry) {
-                          final muscleGroup = entry.value;
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: primaryColor.withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Muscle Group: ${entry.key}",
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5),
-                                Text("Weak Side: ${muscleGroup.weakSide}"),
-                                Text(
-                                    "Difference: ${muscleGroup.difference}"),
-                                Text("Type Code: ${muscleGroup.typeCode}"),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  "Similar Exercises:",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                ...muscleGroup.similarExercises.map(
-                                      (exercise) => Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Text("- ${exercise.name}"),
+                        // Wrap for Categorized Muscle Groups Data
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children:
+                              state.exerciseData.result.entries.map((entry) {
+                            final muscleGroup = entry.value;
+                            return Container(
+                              width: MediaQuery.of(context).size.width *
+                                  0.45, // Adjust width
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: secondaryColor.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Muscle Group: ${entry.key}",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                                  const SizedBox(height: 5),
+                                  Text("Weak Side: ${muscleGroup.weakSide}"),
+                                  Text("Difference: ${muscleGroup.difference}"),
+                                  Text("Type Code: ${muscleGroup.typeCode}"),
+                                  const SizedBox(height: 5),
+                                  const Text(
+                                    "Similar Exercises:",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  ...muscleGroup.similarExercises.map(
+                                    (exercise) => Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Column(
+                                        children: [
+                                          Text("- ${exercise.name} | ${exercise.similarityPercentage}% | ${exercise.weightedScore}%"),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
 
                         const SizedBox(height: 20),
 
                         // Ranked List of Exercises
                         const Text(
-                          "Ranked Exercises:",
+                          "Recommended Exercises:",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10),
-                        ...state.exerciseData.allSortedExercises.map(
-                              (exercise) => Card(
-                            elevation: 3,
-                            margin: const EdgeInsets.only(bottom: 8),
-                            child: ListTile(
-                              title: Text(exercise.name),
-                              subtitle: Text(
-                                  "Similarity: ${exercise.similarityPercentage}%"),
-                              trailing: Text(
-                                "${exercise.weightedScore.toStringAsFixed(2)}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 6,
+                          children: List.generate(
+                            state.exerciseData.allSortedExercises.length,
+                                (index) {
+                              final exercise = state.exerciseData.allSortedExercises[index];
+                              return Container(
+                                width: MediaQuery.of(context).size.width * 0.45, // Compact layout
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: secondaryColor,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Index Number
+                                    CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: Colors.blue.shade700,
+                                      child: Text(
+                                        "${index + 1}",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+
+                                    // Exercise Details
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            exercise.name,
+                                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            "Similarity: ${exercise.similarityPercentage}% | Type: ${exercise.typeCode}",
+                                            style: const TextStyle(fontSize: 11),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    // Weighted Score
+                                    Tooltip(
+                                      message: "Weighted Score - (Importance)",
+                                      child: Text(
+                                        "${exercise.weightedScore.toStringAsFixed(2)}%",
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                        ),
-                      ],
+                        ),                      ],
                     ),
                   );
                 } else if (state is WorkoutPlanError) {
@@ -162,7 +263,8 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                     ),
                   );
                 }
-                return const Center(child: Text("Enter a User ID and tap 'Check'"));
+                return const Center(
+                    child: Text("Enter a User ID and tap 'Check'"));
               },
             ),
           ),
