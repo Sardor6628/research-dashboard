@@ -15,7 +15,6 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
   final TextEditingController _userIdController = TextEditingController();
   String? _selectedTestUserId;
 
-  // List of test user IDs for dropdown
   final List<String> testUserIds = [
     "c50ace03-ee22-4c3b-9216-2cb26e604f1a",
     "29910456-f0fe-4d06-9a6f-0c007d59b098",
@@ -42,9 +41,10 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
       );
     }
   }
+
   @override
   void initState() {
-    _userIdController.text="c50ace03-ee22-4c3b-9216-2cb26e604f1a";
+    _userIdController.text = "c50ace03-ee22-4c3b-9216-2cb26e604f1a";
     _fetchWorkoutPlan();
     super.initState();
   }
@@ -55,7 +55,7 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          // Search Field, Dropdown, and Check Button in the same row
+          // Search Field, Dropdown, and Check Button
           Row(
             children: [
               Expanded(
@@ -82,7 +82,9 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                     _selectedTestUserId = newValue;
                     _userIdController.text = newValue ?? "";
                   });
-                  context.read<WorkoutPlanCubit>().fetchWorkoutPlan(_userIdController.text);
+                  context
+                      .read<WorkoutPlanCubit>()
+                      .fetchWorkoutPlan(_userIdController.text);
                 },
                 items: testUserIds.map((String userId) {
                   return DropdownMenuItem(
@@ -133,11 +135,10 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                           spacing: 10,
                           runSpacing: 10,
                           children:
-                              state.exerciseData.result.entries.map((entry) {
+                          state.exerciseData.result.entries.map((entry) {
                             final muscleGroup = entry.value;
                             return Container(
-                              width: MediaQuery.of(context).size.width *
-                                  0.45, // Adjust width
+                              width: MediaQuery.of(context).size.width * 0.45,
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: secondaryColor.withOpacity(0.8),
@@ -160,17 +161,13 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                                   const Text(
                                     "Similar Exercises:",
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   ...muscleGroup.similarExercises.map(
-                                    (exercise) => Padding(
+                                        (exercise) => Padding(
                                       padding: const EdgeInsets.only(left: 10),
-                                      child: Column(
-                                        children: [
-                                          Text("- ${exercise.name} | ${exercise.similarityPercentage}% | ${exercise.weightedScore}%"),
-
-                                        ],
-                                      ),
+                                      child: Text(
+                                          "- ${exercise.name} | ${exercise.similarityPercentage}% | ${exercise.weightedScore}%"),
                                     ),
                                   ),
                                 ],
@@ -194,18 +191,20 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                           children: List.generate(
                             state.exerciseData.allSortedExercises.length,
                                 (index) {
-                              final exercise = state.exerciseData.allSortedExercises[index];
+                              final exercise =
+                              state.exerciseData.allSortedExercises[index];
                               return Container(
-                                width: MediaQuery.of(context).size.width * 0.45, // Compact layout
+                                width:
+                                MediaQuery.of(context).size.width * 0.45,
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: secondaryColor,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // Index Number
                                     CircleAvatar(
                                       radius: 12,
                                       backgroundColor: Colors.blue.shade700,
@@ -219,32 +218,33 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                                       ),
                                     ),
                                     const SizedBox(width: 6),
-
-                                    // Exercise Details
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             exercise.name,
-                                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           Text(
                                             "Similarity: ${exercise.similarityPercentage}% | Type: ${exercise.typeCode}",
-                                            style: const TextStyle(fontSize: 11),
+                                            style:
+                                            const TextStyle(fontSize: 11),
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
                                     ),
-
-                                    // Weighted Score
                                     Tooltip(
                                       message: "Weighted Score - (Importance)",
                                       child: Text(
                                         "${exercise.weightedScore.toStringAsFixed(2)}%",
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -252,14 +252,28 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                               );
                             },
                           ),
-                        ),                      ],
-                    ),
-                  );
-                } else if (state is WorkoutPlanError) {
-                  return Center(
-                    child: Text(
-                      "Error: ${state.message}",
-                      style: const TextStyle(color: Colors.red),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // Top 5 Workout Plans Section
+                        const Text(
+                          "🏋️‍♂️ Top 5 Recommended Workout Plans:",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue),
+                        ),
+                        const SizedBox(height: 10),
+                        ...state.exerciseData.top5.map(
+                              (plan) => ListTile(
+                            leading: const Icon(Icons.fitness_center),
+                            title: Text(plan.workoutName),
+                            trailing:
+                            Text("Matches: ${plan.matchingCount}"),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }

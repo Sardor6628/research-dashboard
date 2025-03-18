@@ -4,11 +4,13 @@ class ExerciseData {
   final String status;
   final Map<String, MuscleGroup> result;
   final List<Exercise> allSortedExercises;
+  final List<WorkoutPlan> top5;
 
   ExerciseData({
     required this.status,
     required this.result,
     required this.allSortedExercises,
+    required this.top5,
   });
 
   factory ExerciseData.fromJson(Map<String, dynamic> json) {
@@ -17,7 +19,7 @@ class ExerciseData {
 
       Map<String, MuscleGroup> parsedResult = {};
       resultData.forEach((key, value) {
-        if (key != 'all_sorted_exercises' && value is Map<String, dynamic>) {
+        if (key != 'all_sorted_exercises' && key != 'top_5' && value is Map<String, dynamic>) {
           parsedResult[key] = MuscleGroup.fromJson(value);
         }
       });
@@ -27,6 +29,10 @@ class ExerciseData {
         result: parsedResult,
         allSortedExercises: (resultData['all_sorted_exercises'] as List?)
             ?.map((e) => Exercise.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+            [],
+        top5: (resultData['top_5'] as List?)
+            ?.map((e) => WorkoutPlan.fromJson(e as Map<String, dynamic>))
             .toList() ??
             [],
       );
@@ -98,5 +104,22 @@ class Exercise {
     } catch (e) {
       throw Exception("Error parsing Exercise: ${e.toString()}");
     }
+  }
+}
+
+class WorkoutPlan {
+  final String workoutName;
+  final int matchingCount;
+
+  WorkoutPlan({
+    required this.workoutName,
+    required this.matchingCount,
+  });
+
+  factory WorkoutPlan.fromJson(Map<String, dynamic> json) {
+    return WorkoutPlan(
+      workoutName: json['workout_name'] ?? 'Unknown Plan',
+      matchingCount: json['matching_count'] ?? 0,
+    );
   }
 }
