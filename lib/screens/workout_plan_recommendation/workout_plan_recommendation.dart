@@ -135,10 +135,10 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                           spacing: 10,
                           runSpacing: 10,
                           children:
-                          state.exerciseData.result.entries.map((entry) {
+                              state.exerciseData.result.entries.map((entry) {
                             final muscleGroup = entry.value;
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.45,
+                              width: MediaQuery.of(context).size.width * 0.3,
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: secondaryColor.withOpacity(0.8),
@@ -161,10 +161,10 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                                   const Text(
                                     "Similar Exercises:",
                                     style:
-                                    TextStyle(fontWeight: FontWeight.bold),
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   ...muscleGroup.similarExercises.map(
-                                        (exercise) => Padding(
+                                    (exercise) => Padding(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: Text(
                                           "- ${exercise.name} | ${exercise.similarityPercentage}% | ${exercise.weightedScore}%"),
@@ -190,12 +190,11 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                           runSpacing: 6,
                           children: List.generate(
                             state.exerciseData.allSortedExercises.length,
-                                (index) {
+                            (index) {
                               final exercise =
-                              state.exerciseData.allSortedExercises[index];
+                                  state.exerciseData.allSortedExercises[index];
                               return Container(
-                                width:
-                                MediaQuery.of(context).size.width * 0.45,
+                                width: MediaQuery.of(context).size.width * 0.3,
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: secondaryColor,
@@ -203,7 +202,7 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     CircleAvatar(
                                       radius: 12,
@@ -221,7 +220,7 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             exercise.name,
@@ -233,7 +232,7 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                                           Text(
                                             "Similarity: ${exercise.similarityPercentage}% | Type: ${exercise.typeCode}",
                                             style:
-                                            const TextStyle(fontSize: 11),
+                                                const TextStyle(fontSize: 11),
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
@@ -264,13 +263,15 @@ class _WorkoutPlanRecommendationState extends State<WorkoutPlanRecommendation> {
                               fontWeight: FontWeight.bold,
                               color: Colors.blue),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10),
                         ...state.exerciseData.top5.map(
-                              (plan) => ListTile(
-                            leading: const Icon(Icons.fitness_center),
-                            title: Text(plan.workoutName),
-                            trailing:
-                            Text("Matches: ${plan.matchingCount}"),
+                          (plan) => Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: ListTile(
+                              leading: const Icon(Icons.fitness_center),
+                              title: Text(plan.workoutName),
+                              trailing: Text("Matches: ${plan.matchingCount}"),
+                            ),
                           ),
                         ),
                       ],
